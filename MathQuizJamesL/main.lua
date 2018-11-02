@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------
--- Title: Numeric TextField
+-- Title: Math Quiz
 -- Name: James Lyall
 -- Course: ICS2O
 -- This program displays a math equation and asks the 
@@ -12,6 +12,19 @@ display.setStatusBar(display.HiddenStatusBar)
 -- set backgroun colour
 display.setDefault("background", 100/255, 0/255, 10/255)
 
+-- display the winner screen and hide it
+Winner = display.newImageRect("Images/Winner.png", 0, 0)
+Winner.isVisible = false
+
+-- make winner screen same size as the ipad
+Winner.x = display.contentCenterX
+Winner.y = display.contentCenterY
+
+Winner.width = display.contentWidth
+Winner.height = display.contentHeight
+
+
+
 -- local variables
 local questionObject
 local correctObject
@@ -22,14 +35,15 @@ local randomNumber2
 local userAnswer
 local correctAnswer
 local randomOperator
+local correctText
 
 -- Points variables
 local Points = 0
 local pointsText
 
--- Game Over variable
+-- Game Over and winner variable
 local GameOver
-
+local Winner
 -- Variables for the timer.
 local totalSeconds = 10
 local secondsLeft = 10
@@ -37,11 +51,11 @@ local clockText
 local countDownTimer
 
 -- variables for lives.
-local lives = 4
+local lives = 3
 local heart1
 local heart2
 local heart3
-local heart4
+
 
 -- Sound variables
 local correctSound = audio.loadSound( "Sounds/correctSound.mp3")
@@ -62,14 +76,8 @@ heart3 = display.newImageRect("Images/heart.png", 100, 100)
 heart3.x = display.contentWidth * 5 / 8
 heart3.y = display.contentHeight * 1 / 7
 
-heart4 = display.newImageRect("Images/heart.png", 100, 100)
-heart4.x = display.contentWidth * 4 / 8
-heart4.y = display.contentHeight * 1 / 7
-
 local function UpdateLives()
-	if  (lives == 3) then
-			heart4.isVisible = false
-		elseif (lives == 2) then
+	if  (lives == 2) then
 			heart3.isVisible = false
 		elseif (lives == 1) then
 			heart2.isVisible = false
@@ -85,6 +93,9 @@ local function UpdateLives()
 			incorrectSoundChannel = audio.play(incorrectSound)
 	end
 end
+
+
+
 
 -- local function for timer and lives
 local function UpdateTime()
@@ -114,30 +125,47 @@ local function StartTimer()
 	countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
 end
 
-
 -- local functions
 
 local function AskQuestion()
-	-- generate 2 random numbers between a max. and a min. number
-	randomNumber1 = math.random(0, 10)
-	randomNumber2 = math.random(0, 10)
+	-- generate a random operator between a max. and a min. number
+	
 	randomOperator = math.random(1, 4)
 
 	if (randomOperator == 1) then
 	
+		randomNumber1 = math.random(0, 20)
+		randomNumber2 = math.random(0, 20)
+
 		correctAnswer = randomNumber1 + randomNumber2
 
 		-- created question in text object
 		questionObject.text = randomNumber1 .. " + " .. randomNumber2 .. " = "
 
 	elseif (randomOperator == 2) then
+		
+		randomNumber1 = math.random(0, 20)
+		randomNumber2 = math.random(0, 20)
 
-		correctAnswer = randomNumber1 - randomNumber2
+		-- if random number 2 is greater then random number 1 switch them around.
 
-		-- created question in text object
-		questionObject.text = randomNumber1 .. " - " .. randomNumber2 .. " = "
+		if (randomNumber2 > randomNumber1) then
+
+			correctAnswer = randomNumber2 - randomNumber1
+			-- created question in text object
+			questionObject.text = randomNumber2 .. " - " .. randomNumber1 .. " = "
+		else
+			correctAnswer = randomNumber1 - randomNumber2
+		
+			-- created question in text object
+		
+			questionObject.text = randomNumber1 .. " - " .. randomNumber2 .. " = "
+		end
 
 	elseif (randomOperator == 3) then
+
+		randomNumber1 = math.random(0, 10)
+		randomNumber2 = math.random(0, 10)
 
 		correctAnswer = randomNumber1 * randomNumber2
 
@@ -146,12 +174,15 @@ local function AskQuestion()
 
 	elseif (randomOperator == 4) then
 
+		randomNumber1 = math.random(0, 100)
+		randomNumber2 = math.random(0, 100)
+
+		randomNumber1 = randomNumber2 - (randomNumber1 % randomNumber2)
+
 		correctAnswer = randomNumber1 / randomNumber2
 
 		-- create question in text object
 		questionObject.text = randomNumber1 .. " ÷ " .. randomNumber2 .. " = "
-
-
 	end
 end
 
@@ -188,7 +219,7 @@ local function NumericFieldListener( event )
 			event.target.text = ""
 			timer.performWithDelay(2000, HideCorrect)
 			Points = Points + 1
-			pointsText.text = " Points = " .. Points
+			pointsText.text = " Number Correct = " .. Points
 			correctSoundChannel = audio.play(correctSound)
 		else
 			incorrectObject.isVisible = true
@@ -203,18 +234,33 @@ local function NumericFieldListener( event )
 	end
 end
 
+-- make it so when you get 5 points a screen displays saying you won
+local function WinnerScreen(event)
+	if (Points == 5) then
+		Winner = display.newImageRect("Images/Winner.png", 0, 0)
+		Winner.isVisible = true
+		clockText.isVisible = false
+		pointsText.isVisible = false
+		questionObject.isVisible = false
+		numericField.isVisible = false
+	end
+end
+
+-- make it so when you get 5 points a screen displays saying you won
+
+
 -- display clock timer and colour it.
 clockText = display.newText( " Time left: " .. secondsLeft, 500, 600, nil, 50 )
 clockText:setTextColor(10/255, 100/255, 10/255)
 
 -- display points text and colour it
-pointsText = display.newText( " Points = " .. Points, 100, 100, nil, 50)
+pointsText = display.newText( " Number correct = " .. Points, 250, 100, nil, 50)
 pointsText:setTextColor(10/255, 100/255, 10/255)
 
 -- OBJECT CREATION
 
 -- displays a question and sets the colour
-questionObject = display.newText( "", display.contentWidth/3, display.contentHeight/2, nil, 50 )
+questionObject = display.newText( "", display.contentWidth/4, display.contentHeight/2, nil, 50 )
 questionObject:setTextColor(10/255, 100/255, 10/255)
 
 -- created the correct text object and make it invisible
@@ -222,10 +268,13 @@ correctObject = display.newText( "Correct!", display.contentWidth/2, display.con
 correctObject:setTextColor(0, 0, 0)
 correctObject.isVisible = false
 
--- created the incorrect text object and make it invisible
+-- display the correct answer when user gets it wrong
 incorrectObject = display.newText( "Incorrect!", display.contentWidth/2, display.contentHeight/4, nil, 80 )
 incorrectObject:setTextColor(0, 0, 0)
 incorrectObject.isVisible = false
+
+-- created the incorrect text object and make it invisible
+
 
 -- create numeric field
 numericField = native.newTextField( display.contentWidth/2, display.contentHeight/2, 200, 80 )
@@ -237,3 +286,4 @@ numericField:addEventListener( "userInput", NumericFieldListener )
 -- FUNCTION CALLS
 AskQuestion()
 StartTimer()
+WinnerScreen()
