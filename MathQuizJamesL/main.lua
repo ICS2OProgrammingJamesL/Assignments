@@ -221,6 +221,7 @@ local function NumericFieldListener( event )
 			Points = Points + 1
 			pointsText.text = " Number Correct = " .. Points
 			correctSoundChannel = audio.play(correctSound)
+			YouWin( )
 		else
 			incorrectObject.isVisible = true
 			event.target.text = ""
@@ -235,9 +236,8 @@ local function NumericFieldListener( event )
 end
 
 -- make it so when you get 5 points a screen displays saying you won
-local function WinnerScreen(event)
+local function YouWin(Event)
 	if (Points == 5) then
-		Winner = display.newImageRect("Images/Winner.png", 0, 0)
 		Winner.isVisible = true
 		clockText.isVisible = false
 		pointsText.isVisible = false
@@ -246,7 +246,7 @@ local function WinnerScreen(event)
 	end
 end
 
--- make it so when you get 5 points a screen displays saying you won
+
 
 
 -- display clock timer and colour it.
@@ -286,4 +286,3 @@ numericField:addEventListener( "userInput", NumericFieldListener )
 -- FUNCTION CALLS
 AskQuestion()
 StartTimer()
-WinnerScreen()
