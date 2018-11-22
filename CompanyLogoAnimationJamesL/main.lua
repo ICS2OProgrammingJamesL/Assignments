@@ -48,9 +48,7 @@ local function MoveComet(event)
 	Comet.x = Comet.x + scrollSpeed
 	-- make car opacity fade out
 	Comet.alpha = Comet.alpha - 0.001
-	if (Comet2.x == 101) then
-		CometSoundChannel = audio.play(CometSound)
-	end
+	CompanyLogo.alpha = CompanyLogo.alpha - 0.001
 end
     
 -- MoveComet will be called over and over again

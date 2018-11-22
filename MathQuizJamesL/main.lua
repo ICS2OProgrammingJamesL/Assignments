@@ -23,8 +23,6 @@ Winner.y = display.contentCenterY
 Winner.width = display.contentWidth
 Winner.height = display.contentHeight
 
-
-
 -- local variables
 local questionObject
 local correctObject
