@@ -35,6 +35,7 @@ local scene = composer.newScene( sceneName )
 local bkg_image
 local playButton
 local creditsButton
+local instructionsButton
 
 -----------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
@@ -69,7 +70,7 @@ function scene:create( event )
     -----------------------------------------------------------------------------------------
 
     -- Insert the background image and set it to the center of the screen
-    bkg_image = display.newImage("Images/appLogocopy.png")
+    bkg_image = display.newImage("Images/appLogo copy.png")
     bkg_image.x = display.contentCenterX
     bkg_image.y = display.contentCenterY
     bkg_image.width = display.contentWidth
@@ -93,9 +94,12 @@ function scene:create( event )
             x = display.contentWidth/2,
             y = display.contentHeight*7/8,
 
+            width = 150, 
+            height = 150,
+
             -- Insert the images here
-            defaultFile = "Images/Start Button Unpressed.png",
-            overFile = "Images/Start Button Pressed.png",
+            defaultFile = "Images/playButtonUnpressed.png",
+            overFile = "Images/playButtonPressed.png",
 
             -- When the button is released, call the Level1 screen transition function
             onRelease = Level1ScreenTransition          
@@ -107,20 +111,41 @@ function scene:create( event )
     creditsButton = widget.newButton( 
         {
             -- Set its position on the screen relative to the screen size
-            x = display.contentWidth*7/8,
+            x = display.contentWidth*1/8,
             y = display.contentHeight*7/8,
 
+            width = 150, 
+            height = 150,
+
             -- Insert the images here
-            defaultFile = "Images/Credits Button Unpressed.png",
-            overFile = "Images/Credits Button Pressed.png",
+            defaultFile = "Images/creditsButtonUnpressed.png",
+            overFile = "Images/creditsButtonPressed.png",
 
             -- When the button is released, call the Credits transition function
             onRelease = CreditsTransition
         } ) 
     
     -- ADD INSTRUCTIONS BUTTON WIDGET
+    instructionsButton = widget.newButton( 
+        {
+            -- Set its position on the screen relative to the screen size
+            x = display.contentWidth*7/8,
+            y = display.contentHeight*7/8,
+
+            width = 150, 
+            height = 150,
+
+            -- Insert the images here
+            defaultFile = "Images/instructionsButtonUnpressed.png",
+            overFile = "Images/instructionsButtonPressed.png",
+
+            -- When the button is released, call the Credits transition function
+            onRelease = CreditsTransition
+        } ) 
 
     -----------------------------------------------------------------------------------------
+
+
 
     -- Associating button widgets with this scene
     sceneGroup:insert( playButton )

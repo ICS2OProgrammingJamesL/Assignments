@@ -19,17 +19,21 @@ sceneName = "splash_screen"
 local scene = composer.newScene( sceneName )
 
 ----------------------------------------------------------------------------------------
+-- LOCAL SOUNDS
+-----------------------------------------------------------------------------------------
+
+local jungleSounds = audio.loadSound("Sounds/animals144.mp3")
+local jungleSoundsChannel
+
+----------------------------------------------------------------------------------------
 -- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
  
 -- The local variables for this scene
 local CompanyLogo
-local scrollXSpeed = 8
-local scrollYSpeed = -3
 local scrollSpeed = -7
-local jungleSounds = audio.loadSound("Sounds/animals144.mp3")
-local jungleSoundsChannel
-local Comet = display.newImage("Images/Comet.png", 925, 0)
+
+local Comet = display.newImage("Images/Comet.png", 1000, 0)
 local Comet2 = display.newImage("Images/Comet.png", 100, 0)
 
 
@@ -42,13 +46,26 @@ local Comet2 = display.newImage("Images/Comet.png", 100, 0)
 -- Input: this function accepts an event listener
 -- Output: none
 -- Description: This function adds the scroll speed to the x-value of the ship
-local function MoveComet(event)
+local function MoveComet()
     -- add the scroll speed to the x-value of the ship
     Comet.y = Comet.y - scrollSpeed
     Comet.x = Comet.x + scrollSpeed
+
     -- make car opacity fade out
-    Comet.alpha = Comet.alpha - 0.001
-    --CompanyLogo.alpha = CompanyLogo.alpha - 0.001
+    Comet.alpha = Comet.alpha - 0.01
+    CompanyLogo.alpha = CompanyLogo.alpha - 0.01
+end
+
+-- function: MoveComet
+-- Input: this function accepts an event listener
+-- Output: none
+-- Description: This function adds the scroll speed to the x-value of the ship
+local function MoveComet2()
+    -- add the scroll speed to the x-value of the ship
+    Comet2.y = Comet2.y - scrollSpeed
+    Comet2.x = Comet2.x - scrollSpeed
+    -- make car opacity fade out
+    Comet2.alpha = Comet2.alpha - 0.01
 end
 
 -- The function that will go to the main menu 
@@ -56,25 +73,6 @@ local function gotoMainMenu()
     composer.gotoScene( "main_menu" )
 end
 
--- function: MoveComet
--- Input: this function accepts an event listener
--- Output: none
--- Description: This function adds the scroll speed to the x-value of the ship
-local function MoveComet(event)
-    -- add the scroll speed to the x-value of the ship
-    Comet2.y = Comet2.y - scrollSpeed
-    Comet2.x = Comet2.x - scrollSpeed
-    -- make car opacity fade out
-    Comet.alpha = Comet.alpha - 0.001
-end
-
--- MoveComet will be called over and over again
-Runtime:addEventListener("enterFrame", MoveComet2)
-
--- scale the comet
-
-Comet:scale( 0.07, 0.07)
-Comet2:scale( 0.07, 0.07)
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS
@@ -90,20 +88,25 @@ function scene:create( event )
     display.setDefault("background", 0, 0, 0)
 
     -- Insert the beetleship image
-    beetleship = display.newImageRect("Images/CompanyLogo.png", 200, 200)
+    CompanyLogo = display.newImageRect("Images/CompanyLogo.png", 1050, 770)
 
-    -- set the initial x and y position of the beetleship
-    beetleship.x = 100
-    beetleship.y = display.contentHeight/2
+    CompanyLogo.x = display.contentCenterX
+    CompanyLogo.y = display.contentCenterY
+
+    Comet:scale( 0.07, 0.07)
+    Comet2:scale( 0.07, 0.07)
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( beetleship )
-
+    sceneGroup:insert( CompanyLogo )
 end -- function scene:create( event )
 
 -- rotate the second comet so it faces dowm
 
-Comet2:rotate(260)
+-- scale the comet
+
+
+
+
 --------------------------------------------------------------------------------------------
 
 -- The function called when the scene is issued to appear on screen
@@ -127,14 +130,17 @@ function scene:show( event )
         -- start the splash screen music
         jungleSoundsChannel = audio.play(jungleSounds )
 
-      -- MoveComet will be called over and over again
+        -- MoveComet will be called over and over again
         Runtime:addEventListener("enterFrame", MoveComet)
 
-        -- Go to the main menu screen after the given time.
-        timer.performWithDelay ( 3000, gotoMainMenu)          
-        
-    end
+        -- MoveComet will be called over and over again
+        Runtime:addEventListener("enterFrame", MoveComet2)
 
+        -- Go to the main menu screen after the given time.
+        timer.performWithDelay ( 3000, gotoMainMenu)    
+
+        Comet2:rotate(260)         
+    end
 end --function scene:show( event )
 
 -----------------------------------------------------------------------------------------
